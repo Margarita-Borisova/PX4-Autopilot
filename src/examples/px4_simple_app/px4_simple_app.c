@@ -65,7 +65,7 @@ int px4_simple_app_main(int argc, char *argv[])
 	/* advertise attitude topic */
 	struct vehicle_attitude_s att;
 	memset(&att, 0, sizeof(att));
-	orb_advert_t att_pub = orb_advertise(ORB_ID(vehicle_attitude), &att);
+	//orb_advert_t att_pub = orb_advertise(ORB_ID(vehicle_attitude), &att);
 
 	/* one could wait for multiple topics with this technique, just using one here */
 	px4_pollfd_struct_t fds[] = {
@@ -77,7 +77,7 @@ int px4_simple_app_main(int argc, char *argv[])
 
 	int error_counter = 0;
 
-	for (int i = 0; i < 5; i++) {
+	for (int i = 0; i < 100; i++) {
 		/* wait for sensor update of 1 file descriptor for 1000 ms (1 second) */
 		int poll_ret = px4_poll(fds, 1, 1000);
 
@@ -110,11 +110,23 @@ int px4_simple_app_main(int argc, char *argv[])
 				/* set att and publish this information for other apps
 				 the following does not have any meaning, it's just an example
 				*/
-				att.q[0] = accel.xyz[0];
-				att.q[1] = accel.xyz[1];
-				att.q[2] = accel.xyz[2];
+				double x, y, z;
+				x = accel.xyz[0];
+				y = accel.xyz[1];
+				z = accel.xyz[2];
 
-				orb_publish(ORB_ID(vehicle_attitude), att_pub, &att);
+				//double g = sqrt(x*x + y*y + z*z);
+
+
+				double rg = 180.0 / 3.1415;
+
+				PX4_INFO("Angles:\tkren = %8.4f\tteta = %8.4f\n",
+					 atan2(y, z) * rg,
+					atan2( -x, sqrt(y*y+z*z)) * rg);
+
+
+
+				//orb_publish(ORB_ID(vehicle_attitude), att_pub, &att);
 			}
 
 			/* there could be more file descriptors here, in the form like:
