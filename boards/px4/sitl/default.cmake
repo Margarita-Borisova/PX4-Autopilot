@@ -56,6 +56,7 @@ px4_add_board(
 		uuv_att_control
 		vmount
 		vtol_att_control
+		templates/template_module
 	SYSTEMCMDS
 		#dumpfile
 		dyn
