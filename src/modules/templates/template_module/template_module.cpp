@@ -40,6 +40,13 @@
 #include <uORB/topics/parameter_update.h>
 #include <uORB/topics/sensor_combined.h>
 
+// добавила заголовочники
+#include <uORB/uORB.h>
+#include <uORB/topics/vehicle_acceleration.h>
+#include <uORB/topics/vehicle_attitude.h>
+#include <math.h>
+#include <poll.h>
+
 
 int TemplateModule::print_status()
 {
@@ -140,10 +147,12 @@ void TemplateModule::run()
 	// Example: run the loop synchronized to the sensor_combined topic publication
 	//int sensor_combined_sub = orb_subscribe(ORB_ID(sensor_combined));
 
+	// **********************
 	/* subscribe to vehicle_acceleration topic */
 	int sensor_sub_fd = orb_subscribe(ORB_ID(vehicle_acceleration));
+
 	/* limit the update rate to 5 Hz */
-	orb_set_interval(sensor_sub_fd, 1000);
+	orb_set_interval(sensor_sub_fd, 5000);
 
 	/* advertise attitude topic */
 	struct vehicle_attitude_s att;
@@ -212,6 +221,7 @@ void TemplateModule::run()
 	}
 
 	//orb_unsubscribe(sensor_combined_sub);
+	orb_unsubscribe(sensor_sub_fd);
 }
 
 void TemplateModule::parameters_update(bool force)
