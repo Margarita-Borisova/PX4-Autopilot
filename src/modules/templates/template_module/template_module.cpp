@@ -152,7 +152,7 @@ void TemplateModule::run()
 	int sensor_sub_fd = orb_subscribe(ORB_ID(vehicle_acceleration));
 
 	/* limit the update rate to 5 Hz */
-	orb_set_interval(sensor_sub_fd, 5000);
+	orb_set_interval(sensor_sub_fd, 2000);
 
 	/* advertise attitude topic */
 	struct vehicle_attitude_s att;
@@ -212,7 +212,7 @@ void TemplateModule::run()
 				double rg = 180.0 / 3.1415;
 
 				PX4_INFO("Angles:\tkren = %8.4f\tteta = %8.4f\n",
-					 atan2(y, z) * rg,
+					 atan2(-y, -z) * rg,
 					atan2( -x, sqrt(y*y+z*z)) * rg);
 
 		}
